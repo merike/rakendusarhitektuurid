@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="EPOOD2">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.2"/>
+    <property name="source" value="1.3"/>
+	<property name="deployDir" value="t061879_EPOOD2"/>
+	<property name="staticDir" value="/var/www/rakarh/"/>
+	<property name="viewDir" value="src/ee/ttu/t061879/EPOOD2/view"/>
+	<property name="tomcat.home" location="${env.TOMCAT_HOME}"/>
+	<path id="EPOOD2.classpath">
+		<pathelement location="bin"/>
+		<fileset dir="lib">
+    	    <include name="**/*.jar"/>
+		</fileset>
+    	<pathelement location="/usr/share/tomcat6/lib/servlet-api.jar"/>
+    	<pathelement location="/usr/share/tomcat6/lib/postgresql-8.3-604.jdbc4.jar"/>
+		<pathelement location="/usr/share/tomcat6/lib/log4j-1.2.15.jar"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="bin"/>
+    </target>
+	
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+	
+	<target name="build" depends="clean,init">
+		<javac srcdir="src" destdir="bin">
+			<classpath refid="EPOOD2.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="cleanDeploy">
+        <delete><!-- .jsp-s and static files -->
+        	<fileset dir="${tomcat.home}/webapps/${deployDir}" excludes="**/*.txt"/>
+        	<fileset dir="${staticDir}"/>
+    	</delete>
+		<delete dir="${tomcat.home}/webapps/${deployDir}/src"/>
+		<delete dir="${tomcat.home}/webapps/${deployDir}/WEB-INF"/>
+    </target>
+	
+	<target name="deploy" depends="cleanDeploy">
+		<echo message="Deploying..."/>
+		<echo message="Copying class files..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">
+            <fileset dir="bin" includes="**/*.class"/>
+        </copy>
+		<echo message="Copying .xml files from WEB-INF..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF">
+            <fileset dir="conf" includes="**/*.xml"/>
+        </copy>
+		<echo message="Copying .properties files from WEB-INF..."/>
+			<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">
+	            <fileset dir="conf" includes="**/*.properties"/>
+        </copy>
+		<echo message="Copying .jsp files..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/">
+            <fileset dir="${viewDir}" includes="**/*.jsp"/>
+        </copy>
+		<echo message="Copying static files..."/>
+		<copy todir="${staticDir}/">
+            <fileset dir="static" includes="**/*.css, **/*.png, **/*.js"/>
+        </copy>
+		<echo message="Copying libraries..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/lib">
+            <fileset dir="lib" includes="**/*.jar"/>
+        </copy>
+		<echo message="Copying source files..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/src">
+            <fileset dir="src" includes="**/*.java"/>
+        </copy>
+	</target>
+
+</project>

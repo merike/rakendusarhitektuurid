@@ -1,0 +1,33 @@
+
+/* user info */
+#userinfo{
+	border-top:10px solid #004477;
+	padding:0.3em;
+	background:#d5e2ec;
+	float:right;
+}
+
+#userinfo h3{
+	margin:0;
+}
+
+/* forms */
+
+form input, form textarea{
+	float:right;
+	clear:right;
+}
+
+form label{
+	float:left;
+	margin-top:0.2em;
+}
+
+form li{
+	height:1.7em;
+	list-style-type:none;
+}
+
+form ul{
+	padding:0;
+}
