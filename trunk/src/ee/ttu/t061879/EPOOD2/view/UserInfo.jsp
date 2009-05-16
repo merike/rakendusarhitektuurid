@@ -13,5 +13,8 @@ if(u != null){ %>
 	out.print("kasutajanimi: " + u.getUserName() + "<br />");
 	out.print(request.getSession().getAttribute("auth"));
 }
+else{
+	out.println("Kasutajainfo puudub.");
+}
 %>
 </div>

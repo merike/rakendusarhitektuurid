@@ -16,15 +16,15 @@
 		Collection<Catalog> subs = top.getSubCatalogs();
 		out.println("<ul>");
 		for(Catalog sub : subs){
-	out.println("<li>" + sub.getName() + "</li>");
+			out.println("<li>" + sub.getName() + "</li>");
 		}
 		
-		out.println("<li><a href='../AddCatalog/" + top.getProductCatalog() + "/'>Lisa kataloog</a></li>");
+		out.println("<li><a href='" + request.getContextPath() + "/AddCatalog/" + top.getProductCatalog() + "/'>Lisa kataloog</a></li>");
 		out.println("</ul>");
 		out.println("</li>");
 	}
 	
-	out.println("<li><a href='../AddCatalog/'>Lisa kataloog</a></li>");
+	out.println("<li><a href='" + request.getContextPath() + "/AddCatalog/'>Lisa kataloog</a></li>");
 	out.println("</ul>");
 %>
 	

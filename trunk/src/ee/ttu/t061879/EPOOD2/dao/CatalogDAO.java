@@ -1,8 +1,10 @@
 package ee.ttu.t061879.EPOOD2.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -89,5 +91,31 @@ public class CatalogDAO {
 		}
 		
 		return catalogs;
+	}
+	
+	public boolean addCatalog(Catalog c, int user){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			sql = "{call add_top_level_catalog(?, ?, ?, ?, ?)}";
+			CallableStatement cs = connection.prepareCall(sql);
+			
+			cs.setString(1, c.getName());
+			cs.setString(2, c.getDescription());
+			cs.setInt(3, user);
+			cs.setInt(4, c.getStructUnit());
+			cs.registerOutParameter(5, Types.INTEGER);
+			
+			cs.executeUpdate();
+			
+			if(cs.getInt(5) != 0) result = true;
+		}
+		catch(Exception e){
+			logger.log("CatalogDAO.addCatalog() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
 	}
 }

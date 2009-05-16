@@ -78,6 +78,23 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/AddCatalog.jsp")
 				.forward(request, response);
 			}
+			else if(mode != null && mode.equalsIgnoreCase("AddCatalogSubmit")){
+				logger.log("controller: AddCatalogSubmit", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.add(request, response);
+				
+				boolean r = (Boolean)request.getAttribute("insertResult");
+				logger.log("controller catalog insert result " + r, "DEBUG");
+				
+				if(r){
+					logger.log("controller catalog insert successful", "DEBUG");
+					model.list(request, response);
+					getServletContext().getRequestDispatcher("/CatalogList.jsp")
+					.forward(request, response);
+				}
+				else getServletContext().getRequestDispatcher("/AddCatalog.jsp")
+					.forward(request, response);
+			}
 			else{
 				logger.log("controller: default", "DEBUG");
 				CatalogModel model = new CatalogModel();
