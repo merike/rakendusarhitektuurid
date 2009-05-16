@@ -10,7 +10,7 @@
 				<input id="nimi" name="nimi" size="15" /><br>
 			</li>
 			<li>
-				<label for="password">Kataloogi kirjeldus</label>
+				<label for="kirjeldus">Kataloogi kirjeldus</label>
 				<textarea id="kirjeldus" name="kirjeldus" rows="2" cols="19"></textarea><br>
 			</li>
 			<li>

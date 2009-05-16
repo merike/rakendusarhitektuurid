@@ -11,3 +11,10 @@
 		out.println(request.getAttribute("submode")); %>
 	<jsp:include page="UserInfo.jsp"></jsp:include>
 	<br /><br /><br /><br /><br /><br /><br />
+	<%
+		if(request.getAttribute("info") != null){
+			out.println("<p>" + request.getAttribute("info") + "</p>");
+		}
+	
+	
+	%>

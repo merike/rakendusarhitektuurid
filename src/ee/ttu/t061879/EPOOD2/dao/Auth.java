@@ -27,7 +27,7 @@ public class Auth {
 		try{
 			this.statement = connection.createStatement();
 			
-			sql = "SELECT first_name, last_name, username, emp_role, current_struct_unit FROM employee e JOIN emp_user u" +
+			sql = "SELECT emp_user, first_name, last_name, username, emp_role, current_struct_unit FROM employee e JOIN emp_user u" +
 					" ON(e.employee=u.employee) WHERE username = '" + username +
 					"' AND passw = MD5('" + password + "');"; 
 			logger.log(sql, "INFO");
@@ -35,11 +35,12 @@ public class Auth {
 			
 			while(set.next()){
 				u = new User();
+				u.setEmpUser(set.getInt("emp_user"));
 				u.setFirstName(set.getString("first_name"));
 				u.setLastName(set.getString("last_name"));
 				u.setUserName(set.getString("username"));
 				u.setEmpRole(set.getString("emp_role"));
-				u.setCurrentStructUnit(set.getString("current_struct_unit"));
+				u.setCurrentStructUnit(set.getInt("current_struct_unit"));
 			}
 			
 			if(u != null){
