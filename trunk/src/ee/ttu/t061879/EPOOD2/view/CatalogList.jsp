@@ -11,20 +11,32 @@
 	
 	for(Catalog top : list){
 		out.println("<li>");
-		out.println(top.getName());
+		out.println(top.getName()
+				+ " <a href='" + request.getContextPath()
+				+ "/EditCatalog/" + top.getProductCatalog() + "" 
+				+ "/'>Muuda</a>");
 		
 		Collection<Catalog> subs = top.getSubCatalogs();
 		out.println("<ul>");
 		for(Catalog sub : subs){
-			out.println("<li>" + sub.getName() + "</li>");
+			out.println("<li>" 
+			+ sub.getName()
+			+ " <a href='" + request.getContextPath()
+			+ "/EditCatalog/" + sub.getProductCatalog() + "" 
+			+ "/'>Muuda</a>"
+			+ "</li>");
 		}
 		
-		out.println("<li><a href='" + request.getContextPath() + "/AddCatalog/" + top.getProductCatalog() + "/'>Lisa kataloog</a></li>");
+		out.println("<li><a href='" + request.getContextPath()
+				+ "/AddCatalog/" + top.getProductCatalog() 
+				+ "/'>Lisa kataloog</a></li>");
 		out.println("</ul>");
 		out.println("</li>");
 	}
 	
-	out.println("<li><a href='" + request.getContextPath() + "/AddCatalog/'>Lisa kataloog</a></li>");
+	out.println("<li><a href='" 
+			+ request.getContextPath() 
+			+ "/AddCatalog/'>Lisa kataloog</a></li>");
 	out.println("</ul>");
 %>
 	

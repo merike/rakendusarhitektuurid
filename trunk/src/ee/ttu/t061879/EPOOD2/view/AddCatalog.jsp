@@ -4,6 +4,15 @@
 <jsp:include page="Head.jsp"></jsp:include>	
 	
 	<form action="<% out.print(request.getContextPath()); %>/AddCatalogSubmit/" method="post" style="width: 22em;">
+		<%
+			if(request.getParameter("submode") != null){
+				try{
+					int subCatalog = Integer.parseInt(request.getParameter("submode"));
+					out.println("<input type='hidden' name='submode' value='" + subCatalog + "'/>");
+				}
+				catch(Exception e){}
+			}
+		%>
 		<ul>
 			<li>
 				<label for="nimi">Kataloogi nimi</label>

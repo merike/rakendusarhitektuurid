@@ -8,7 +8,7 @@ if(u != null){ %>
 
 <%
 	out.print("<h3>" + u.getFirstName() + " " + u.getFirstName() + "</h3>");
-	out.print("struktuuriÃ¼ksus: " + u.getCurrentStructUnit() + "<br />");
+	out.print("struktuuriüksus: " + u.getCurrentStructUnit() + "<br />");
 	out.print("roll: " + u.getEmpRole() + "<br />");
 	out.print("kasutajanimi: " + u.getUserName() + "<br />");
 	out.print(request.getSession().getAttribute("auth"));

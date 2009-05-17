@@ -69,17 +69,18 @@ public class CatalogDAO {
 			set = statement.executeQuery(sql);
 						
 			while(set.next()){
-				logger.log("subcatalog", "DEBUG");
+				logger.log("CatalogDao.getCatalogs() subcatalog", "DEBUG");
 				Catalog c = new Catalog();
 				c.setUpperCatalog(set.getInt("upper_catalog"));
 				c.setName(set.getString("name"));
 				c.setDescription(set.getString("description"));
+				c.setProductCatalog(set.getInt("product_catalog"));
 				
 				for(int i = 0; i < topLevelCatalogs.size(); i++){
-					logger.log(catalogs.get(i).getProductCatalog() + " " + c.getUpperCatalog(), "DEBUG");
+					logger.log("CatalogDao.getCatalogs() " + catalogs.get(i).getProductCatalog() + " " + c.getUpperCatalog(), "DEBUG");
 					if(catalogs.get(i).getProductCatalog() == c.getUpperCatalog()){
 						catalogs.get(i).addSubCatalog(c);
-						logger.log("Adding subcatalog", "DEBUG");
+						logger.log("CatalogDao.getCatalogs() Adding subcatalog", "DEBUG");
 						break;
 					}
 				}
@@ -99,21 +100,91 @@ public class CatalogDAO {
 		try{
 			this.statement = connection.createStatement();
 			
-			sql = "{call add_top_level_catalog(?, ?, ?, ?, ?)}";
-			CallableStatement cs = connection.prepareCall(sql);
-			
-			cs.setString(1, c.getName());
-			cs.setString(2, c.getDescription());
-			cs.setInt(3, user);
-			cs.setInt(4, c.getStructUnit());
-			cs.registerOutParameter(5, Types.INTEGER);
-			
-			cs.executeUpdate();
-			
-			if(cs.getInt(5) != 0) result = true;
+			CallableStatement cs;
+			if(c.getUpperCatalog() == 0){
+				sql = "{call add_top_level_catalog(?, ?, ?, ?, ?)}";
+				cs = connection.prepareCall(sql);
+				
+				cs.setString(1, c.getName());
+				cs.setString(2, c.getDescription());
+				cs.setInt(3, user);
+				cs.setInt(4, c.getStructUnit());
+				cs.registerOutParameter(5, Types.INTEGER);
+				logger.log(cs.toString(), "INFO");
+				
+				cs.executeUpdate();
+				if(cs.getInt(5) != 0) result = true;
+			}
+			else{
+				sql = "{call add_sub_catalog(?, ?, ?, ?, ?, ?)}";
+				cs = connection.prepareCall(sql);
+				
+				cs.setString(1, c.getName());
+				cs.setString(2, c.getDescription());
+				cs.setInt(3, user);
+				cs.setInt(4, c.getStructUnit());
+				cs.setInt(5, c.getUpperCatalog());
+				
+				cs.registerOutParameter(6, Types.INTEGER);
+				
+				cs.executeUpdate();
+				if(cs.getInt(6) != 0) result = true;
+			}
 		}
 		catch(Exception e){
 			logger.log("CatalogDAO.addCatalog() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
+	}
+	
+	public Catalog getCatalog(int catalog){
+		try{
+			this.statement = connection.createStatement();
+			
+			sql = "SELECT product_catalog, name, description " +
+			"FROM product_catalog " +
+			"WHERE product_catalog = " + catalog +";"; 
+			logger.log(sql, "INFO");
+			set = statement.executeQuery(sql);
+			
+			Catalog c = new Catalog();
+			while(set.next()){
+				c.setName(set.getString("name"));
+				c.setDescription(set.getString("description"));
+				c.setProductCatalog(set.getInt("product_catalog"));
+			}
+			return c;
+		}
+		catch(Exception e){
+			logger.log("CatalogDAO.getCatalog() " + e.getMessage(), "ERROR");
+		}
+		
+		return null;
+	}
+	
+	public boolean editCatalog(Catalog c, int user){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			CallableStatement cs;
+			sql = "{call edit_catalog(?, ?, ?, ?, ?)}";
+			cs = connection.prepareCall(sql);
+			
+			cs.setInt(1, c.getProductCatalog());
+			cs.setString(2, c.getName());
+			cs.setString(3, c.getDescription());
+			cs.setInt(4, user);
+			cs.registerOutParameter(5, Types.INTEGER);
+			logger.log(cs.toString(), "INFO");
+			
+			cs.executeUpdate();
+			if(cs.getInt(5) == 1) result = true;
+		}
+		catch(Exception e){
+			logger.log("CatalogDAO.editCatalog() " + e.getMessage(), "ERROR");
 		}
 		
 		return result;

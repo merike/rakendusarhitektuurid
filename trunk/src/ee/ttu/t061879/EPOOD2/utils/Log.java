@@ -11,7 +11,7 @@ public class Log {
   }
   
   public void log(String message, String level) {
-	logger.info(message);
+	logger.info(level + " " + message);
 	System.out.println(message);
   }
 }
