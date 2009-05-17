@@ -25,11 +25,8 @@ public class Pood extends HttpServlet{
 		ResourceBundle b = ResourceBundle.getBundle("app-config");
 		request.setAttribute("staticPath", b.getString("static_path"));
 		
-		try{
-			request.setCharacterEncoding("UTF-8");
-		}catch(Exception e){ logger.log(e.getMessage(), "ERROR");}
-		
 		request.setAttribute("title", b.getString("title"));
+		response.setCharacterEncoding("UTF-8");
 		
 		String mode = request.getParameter("mode");
 		String submode = request.getParameter("submode");
@@ -88,12 +85,39 @@ public class Pood extends HttpServlet{
 				
 				if(r){
 					logger.log("controller catalog insert successful", "DEBUG");
-					model.list(request, response);
 					getServletContext().getRequestDispatcher("/CatalogList.jsp")
 					.forward(request, response);
 				}
-				else getServletContext().getRequestDispatcher("/AddCatalog.jsp")
+				else{
+					logger.log("controller catalog insert unsuccessful", "DEBUG");
+					getServletContext().getRequestDispatcher("/AddCatalog.jsp")
 					.forward(request, response);
+				}
+			}
+			else if(mode != null && mode.equalsIgnoreCase("EditCatalog")){
+				logger.log("controller: EditCatalog", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.get(request, response);
+				getServletContext().getRequestDispatcher("/EditCatalog.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("EditCatalogSubmit")){
+				logger.log("controller: EditCatalogSubmit", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.edit(request, response);
+				
+				boolean r = (Boolean)request.getAttribute("editResult");
+				if(r){
+					logger.log("controller: catalog edit successful", "DEBUG");
+					getServletContext().getRequestDispatcher("/CatalogList.jsp")
+					.forward(request, response);
+				}
+				else{
+					logger.log("controller: catalog edit unsuccessful", "DEBUG");
+					getServletContext().getRequestDispatcher("/EditCatalog.jsp")
+					.forward(request, response);
+				}
+				
 			}
 			else{
 				logger.log("controller: default", "DEBUG");

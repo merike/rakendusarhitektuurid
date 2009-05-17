@@ -7,9 +7,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
+	<div id="content">
 	<% out.println(request.getAttribute("mode"));
 		out.println(request.getAttribute("submode")); %>
-	<jsp:include page="UserInfo.jsp"></jsp:include>
 	<br /><br /><br /><br /><br /><br /><br />
 	<%
 		if(request.getAttribute("info") != null){
