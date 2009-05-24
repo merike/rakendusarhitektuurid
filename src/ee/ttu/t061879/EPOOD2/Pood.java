@@ -1,6 +1,7 @@
 package ee.ttu.t061879.EPOOD2;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import java.util.ResourceBundle;
 
@@ -26,6 +27,12 @@ public class Pood extends HttpServlet{
 		request.setAttribute("staticPath", b.getString("static_path"));
 		
 		request.setAttribute("title", b.getString("title"));
+		try{
+			request.setCharacterEncoding("UTF-8");
+		}
+		catch(UnsupportedEncodingException e){
+			logger.log("controller: couldn't set encoding", "ERROR");
+		}
 		response.setCharacterEncoding("UTF-8");
 		
 		String mode = request.getParameter("mode");
@@ -63,11 +70,28 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/Login.jsp")
 				.forward(request, response);
 			}
-			else if(mode != null && mode.equalsIgnoreCase("ListCatalogs")){
-				logger.log("controller: ListCatalogs", "DEBUG");
+			else if(mode != null && mode.equalsIgnoreCase("CatalogList")
+					&& submode == null){
+				logger.log("controller: CatalogList", "DEBUG");
 				CatalogModel model = new CatalogModel();
 				model.list(request, response);
 				getServletContext().getRequestDispatcher("/CatalogList.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("CatalogList")
+					&& submode != null){
+				logger.log("controller: CatalogList remember", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.rememberCatalog(request, response);
+				model.list(request, response);
+				getServletContext().getRequestDispatcher("/CatalogList.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("DestCatalog")){
+				logger.log("controller: DestCatalog", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.listDest(request, response);
+				getServletContext().getRequestDispatcher("/DestCatalogs.jsp")
 				.forward(request, response);
 			}
 			else if(mode != null && mode.equalsIgnoreCase("AddCatalog")){

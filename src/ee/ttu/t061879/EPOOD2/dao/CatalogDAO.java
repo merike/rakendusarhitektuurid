@@ -139,6 +139,7 @@ public class CatalogDAO {
 	}
 	
 	public Catalog getCatalog(int catalog){
+		logger.log("CatalogDAO.getCatalog()", "DEBUG");
 		try{
 			this.statement = connection.createStatement();
 			
@@ -189,4 +190,6 @@ public class CatalogDAO {
 		
 		return result;
 	}
+	
+	
 }
