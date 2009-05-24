@@ -85,19 +85,63 @@ AS $$
 DECLARE
 	pr product_catalog.product_catalog%TYPE;
 	err_msg TEXT;
+	upper INT;
+	level INT;
 
 BEGIN
-	SELECT product_catalog INTO pr FROM product_catalog WHERE product_catalog = id 
-	AND nimi NOT IN (SELECT name FROM product_catalog WHERE product_catalog != id);
+	SELECT product_catalog INTO pr FROM product_catalog 
+	WHERE upper_catalog IS NULL AND product_catalog = id;
+	
 	IF FOUND THEN
-		UPDATE product_catalog SET name = nimi, description = kirjeldus
-		WHERE product_catalog = id;
-		
-		SELECT 1 INTO tulemus;
-	ELSE 
-		SELECT 0 INTO tulemus;
+		level := 0;
+	ELSE
+		level := 1; 
 	END IF;
+	
+	/* top-level */
+	IF level = 0 THEN
+		SELECT product_catalog INTO pr FROM product_catalog 
+		WHERE 
+		product_catalog = id 
+		AND nimi NOT IN 
+			(SELECT name FROM product_catalog WHERE product_catalog != id AND upper_catalog IS NULL)
+		;
 		
+		/* ok to update */
+		IF FOUND THEN
+			UPDATE product_catalog SET name = nimi, description = kirjeldus
+			WHERE product_catalog = id;
+			
+			SELECT 1 INTO tulemus;
+		/* not ok to update */
+		ELSE
+			SELECT 0 INTO tulemus;
+		END IF;
+	
+	/* sub-catalog */	
+	ELSE
+		SELECT product_catalog INTO pr FROM product_catalog 
+		WHERE 
+		product_catalog = id 
+		AND nimi NOT IN 
+			(SELECT name FROM product_catalog 
+			WHERE product_catalog != id AND upper_catalog = 
+				(SELECT upper_catalog FROM product_catalog WHERE product_catalog = id)
+			)
+		;
+		
+		/* ok to update */
+		IF FOUND THEN
+			UPDATE product_catalog SET name = nimi, description = kirjeldus
+			WHERE product_catalog = id;
+			
+			SELECT 1 INTO tulemus;
+		/* not ok to update */
+		ELSE
+			SELECT 0 INTO tulemus;
+		END IF;
+	END IF;
+	
 	EXCEPTION WHEN raise_exception THEN 
 		err_msg := SQLSTATE || ': ' || SQLERRM;
         RAISE EXCEPTION '%', err_msg ; 

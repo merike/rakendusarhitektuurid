@@ -13,8 +13,8 @@
 		out.println("<li>");
 		out.println(top.getName()
 				+ " <a href='" + request.getContextPath()
-				+ "/EditCatalog/" + top.getProductCatalog() + "" 
-				+ "/'>Muuda</a>");
+				+ "/EditCatalog/" + top.getProductCatalog() + "/" 
+				+ "'>Muuda</a>");
 		
 		Collection<Catalog> subs = top.getSubCatalogs();
 		out.println("<ul>");
@@ -22,8 +22,12 @@
 			out.println("<li>" 
 			+ sub.getName()
 			+ " <a href='" + request.getContextPath()
-			+ "/EditCatalog/" + sub.getProductCatalog() + "" 
-			+ "/'>Muuda</a>"
+			+ "/EditCatalog/" + sub.getProductCatalog() + "/" 
+			+ "'>Muuda</a>"
+			
+			+ " <a href='" + request.getContextPath()
+			+ "/CatalogList/" + sub.getProductCatalog() + "/" 
+			+ "'>+</a>"
 			+ "</li>");
 		}
 		

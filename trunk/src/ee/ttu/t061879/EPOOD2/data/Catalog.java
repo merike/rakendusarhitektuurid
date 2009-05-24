@@ -20,6 +20,11 @@ public class Catalog {
 		subCatalogs = new ArrayList<Catalog>();
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return this.productCatalog == ((Catalog)obj).getProductCatalog();
+	}
+
 	public Collection<Catalog> getSubCatalogs() {
 		return subCatalogs;
 	}
