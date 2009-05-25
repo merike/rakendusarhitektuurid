@@ -9,7 +9,7 @@ if(c != null && c.size() > 0){ %>
 <%
 	out.print("<h3>Kataloogid puhvris:</h3>");
 	for(Catalog cat : c){
-		out.print(cat.getName() + "<br />");
+		out.print("<span title='" + cat.getDescription() + "'>" + cat.getName() + "</span><br />");
 	}
 	
 	out.println("<a href='" + request.getContextPath()

@@ -165,13 +165,26 @@ DECLARE
 	err_msg TEXT;
 
 BEGIN
-	SELECT product_catalog INTO pr FROM product_catalog WHERE upper_catalog = sihtKataloog 
-	AND name = (SELECT name FROM product_catalog WHERE product_catalog = kataloogId);
-	IF NOT FOUND THEN
-		UPDATE product_catalog SET upper_catalog = sihtKataloog WHERE product_catalog = kataloogId;
-		SELECT 0 INTO tulemus;
-	ELSE 
+	/* forbid moving upper level catalog */
+	SELECT product_catalog INTO pr FROM product_catalog WHERE product_catalog = kataloogId AND upper_catalog IS NULL;
+	IF FOUND THEN
 		SELECT 1 INTO tulemus;
+	ELSE
+		/* NOT allowing move to subcatalog, thus increasing tree depth */
+		SELECT product_catalog INTO pr FROM product_catalog WHERE product_catalog = sihtKataloog AND upper_catalog IS NOT NULL;
+		IF FOUND THEN
+			SELECT 2 INTO tulemus;
+		ELSE
+			/* sub-catalogs with same name disallowed */
+			SELECT product_catalog INTO pr FROM product_catalog WHERE upper_catalog = sihtKataloog 
+			AND name = (SELECT name FROM product_catalog WHERE product_catalog = kataloogId);
+			IF NOT FOUND THEN
+				UPDATE product_catalog SET upper_catalog = sihtKataloog WHERE product_catalog = kataloogId;
+				SELECT 0 INTO tulemus;
+			ELSE 
+				SELECT 3 INTO tulemus;
+			END IF;
+		END IF;
 	END IF;
 		
 	EXCEPTION WHEN raise_exception THEN 

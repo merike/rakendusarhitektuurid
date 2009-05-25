@@ -11,9 +11,9 @@
 		out.println("<ul>");
 		
 		for(Catalog top : list){
-			out.println("<li>");
+			out.println("<li><span title='" + top.getDescription() + "'>");
 			out.println(top.getName()
-					+ " <a href='" + request.getContextPath()
+					+ "</span> <a href='" + request.getContextPath()
 					+ "/DestCatalog/" + top.getProductCatalog() + "/" 
 					+ "'>Tõsta alamkataloogideks</a>");
 			out.println("</li>");
