@@ -151,3 +151,35 @@ BEGIN
 		
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION move_catalog
+(
+	kataloogId INT,
+	sihtKataloog INT,
+	OUT tulemus INT
+)
+AS $$
+DECLARE
+	pr product_catalog.product_catalog%TYPE;
+	err_msg TEXT;
+
+BEGIN
+	SELECT product_catalog INTO pr FROM product_catalog WHERE upper_catalog = sihtKataloog 
+	AND name = (SELECT name FROM product_catalog WHERE product_catalog = kataloogId);
+	IF NOT FOUND THEN
+		UPDATE product_catalog SET upper_catalog = sihtKataloog WHERE product_catalog = kataloogId;
+		SELECT 0 INTO tulemus;
+	ELSE 
+		SELECT 1 INTO tulemus;
+	END IF;
+		
+	EXCEPTION WHEN raise_exception THEN 
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+        RAISE EXCEPTION '%', err_msg ; 
+		WHEN OTHERS THEN
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+		RAISE EXCEPTION 'SQL: %', err_msg ;
+		
+END;
+$$ LANGUAGE plpgsql;

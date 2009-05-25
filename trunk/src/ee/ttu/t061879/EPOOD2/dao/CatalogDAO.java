@@ -77,7 +77,6 @@ public class CatalogDAO {
 				c.setProductCatalog(set.getInt("product_catalog"));
 				
 				for(int i = 0; i < topLevelCatalogs.size(); i++){
-					logger.log("CatalogDao.getCatalogs() " + catalogs.get(i).getProductCatalog() + " " + c.getUpperCatalog(), "DEBUG");
 					if(catalogs.get(i).getProductCatalog() == c.getUpperCatalog()){
 						catalogs.get(i).addSubCatalog(c);
 						logger.log("CatalogDao.getCatalogs() Adding subcatalog", "DEBUG");
@@ -191,5 +190,29 @@ public class CatalogDAO {
 		return result;
 	}
 	
+	public boolean moveCatalog(int catalogId, int destCatalog){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			CallableStatement cs;
+			sql = "{call move_catalog(?, ?, ?)}";
+			cs = connection.prepareCall(sql);
+			
+			cs.setInt(1, catalogId);
+			cs.setInt(2, destCatalog);
+			cs.registerOutParameter(3, Types.INTEGER);
+			logger.log(cs.toString(), "INFO");
+			
+			cs.executeUpdate();
+			if(cs.getInt(3) == 0) result = true;
+		}
+		catch(Exception e){
+			logger.log("CatalogDAO.moveCatalog() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
+	}
 	
 }

@@ -2,7 +2,6 @@ package ee.ttu.t061879.EPOOD2.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -170,6 +169,38 @@ public class CatalogModel {
 		}
 		catch (Exception e) {
 			logger.log("CatalogModel.listDest() " + e.getMessage(), "ERROR");
+		}
+	}
+	
+	public void moveCatalogs(HttpServletRequest request, HttpServletResponse response){
+		ArrayList<Catalog> c = new ArrayList<Catalog>();
+		
+		HttpSession s = request.getSession();
+		ArrayList<Catalog> rememberedCatalogs = (ArrayList<Catalog>)s.getAttribute("rememberedCatalogs");
+		if(rememberedCatalogs == null || rememberedCatalogs.size() == 0){
+			request.setAttribute("info", "Puhvris polnud ühtki kataloogi!");
+			return;
+		}
+		int size = rememberedCatalogs.size();
+		
+		try{
+			CatalogDAO dao = new CatalogDAO();
+			int dest = Integer.parseInt((String)request.getAttribute("submode"));
+			int moved = 0;
+			ArrayList<Catalog> rememberedCatalogsNew = new ArrayList<Catalog>();
+			
+			for(Catalog cat : rememberedCatalogs){
+				boolean result = dao.moveCatalog(cat.getProductCatalog(), dest);
+				if(result) moved++;
+				else rememberedCatalogsNew.add(cat);
+			}
+			
+			if(size == moved) request.setAttribute("info", "Kataloogide tõstmine õnnestus!");
+			else request.setAttribute("info", (size - moved) + " kataloogi tõstmine ebaõnnestus");
+			s.setAttribute("rememberedCatalogs", rememberedCatalogsNew);
+		}
+		catch (Exception e) {
+			logger.log("CatalogModel.moveCatalogs() " + e.getMessage(), "ERROR");
 		}
 	}
 }

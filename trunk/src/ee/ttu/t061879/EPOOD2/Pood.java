@@ -87,11 +87,21 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/CatalogList.jsp")
 				.forward(request, response);
 			}
-			else if(mode != null && mode.equalsIgnoreCase("DestCatalog")){
+			else if(mode != null && mode.equalsIgnoreCase("DestCatalog")
+					&& submode == null){
 				logger.log("controller: DestCatalog", "DEBUG");
 				CatalogModel model = new CatalogModel();
 				model.listDest(request, response);
 				getServletContext().getRequestDispatcher("/DestCatalogs.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("DestCatalog")
+					&& submode != null){
+				logger.log("controller: DestCatalog", "DEBUG");
+				CatalogModel model = new CatalogModel();
+				model.moveCatalogs(request, response);
+				model.list(request, response);
+				getServletContext().getRequestDispatcher("/CatalogList.jsp")
 				.forward(request, response);
 			}
 			else if(mode != null && mode.equalsIgnoreCase("AddCatalog")){
