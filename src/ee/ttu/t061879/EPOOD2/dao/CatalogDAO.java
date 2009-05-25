@@ -207,6 +207,7 @@ public class CatalogDAO {
 			
 			cs.executeUpdate();
 			if(cs.getInt(3) == 0) result = true;
+			else logger.log("CatalogDAO.moveCatalog() " + cs.getInt(3), "DEUBG");
 		}
 		catch(Exception e){
 			logger.log("CatalogDAO.moveCatalog() " + e.getMessage(), "ERROR");
