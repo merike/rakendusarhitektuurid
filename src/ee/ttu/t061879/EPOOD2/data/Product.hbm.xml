@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="ee.ttu.t061879.EPOOD2.data.Product" table="product">
+		<id name="product" type="java.lang.Integer" column="product">
+			<generator class="increment" />
+		</id>
+		<property name="enterprise" />
+		<property name="price" />
+		<property name="code" />
+		<property name="name" />
+		<property name="description" />
+		<property name="producer" />
+		<property name="created" />
+		<property name="updated" />
+	</class>
+</hibernate-mapping>

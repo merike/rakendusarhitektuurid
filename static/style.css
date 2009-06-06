@@ -24,6 +24,8 @@
 form input, form textarea{
 	float:right;
 	clear:right;
+	margin-left:0.2em;
+	margin-bottom:0.2em;
 }
 
 form label{
@@ -34,6 +36,7 @@ form label{
 form li{
 	height:1.7em;
 	list-style-type:none;
+	clear:right;
 }
 
 form ul{
