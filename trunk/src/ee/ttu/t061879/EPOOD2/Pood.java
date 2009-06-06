@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ee.ttu.t061879.EPOOD2.dao.Auth;
 import ee.ttu.t061879.EPOOD2.model.CatalogModel;
+import ee.ttu.t061879.EPOOD2.model.ProductModel;
 import ee.ttu.t061879.EPOOD2.utils.Log;
 
 public class Pood extends HttpServlet{
@@ -97,7 +98,7 @@ public class Pood extends HttpServlet{
 			}
 			else if(mode != null && mode.equalsIgnoreCase("DestCatalog")
 					&& submode != null){
-				logger.log("controller: DestCatalog", "DEBUG");
+				logger.log("controller: DestCatalog Choose", "DEBUG");
 				CatalogModel model = new CatalogModel();
 				model.moveCatalogs(request, response);
 				model.list(request, response);
@@ -151,7 +152,19 @@ public class Pood extends HttpServlet{
 					getServletContext().getRequestDispatcher("/EditCatalog.jsp")
 					.forward(request, response);
 				}
-				
+			}
+			else if(mode != null && mode.equalsIgnoreCase("ProductSearch")){
+				logger.log("controller: ProductSearch", "DEBUG");
+				getServletContext().getRequestDispatcher("/ProductSearch.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("ProductView")
+					&& submode != null){
+				logger.log("controller: ProductView", "DEBUG");
+				ProductModel model = new ProductModel();
+				model.get(request, response);
+				getServletContext().getRequestDispatcher("/ProductView.jsp")
+				.forward(request, response);
 			}
 			else{
 				logger.log("controller: default", "DEBUG");

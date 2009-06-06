@@ -47,9 +47,17 @@
 		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">
             <fileset dir="bin" includes="**/*.class"/>
         </copy>
-		<echo message="Copying .xml files from WEB-INF..."/>
+		<echo message="Copying hibernate mappings..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">
+            <fileset dir="src" includes="**/*.hbm.xml"/>
+        </copy>
+		<echo message="Copying .xml files from conf..."/>
 		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF">
-            <fileset dir="conf" includes="**/*.xml"/>
+            <fileset dir="conf" includes="**/*.xml" excludes="hibernate.cfg.xml" />
+        </copy>
+		<echo message="Copying hibernate configuration from conf..."/>
+		<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">
+            <fileset dir="conf" includes="hibernate.cfg.xml" />
         </copy>
 		<echo message="Copying .properties files from WEB-INF..."/>
 			<copy todir="${tomcat.home}/webapps/${deployDir}/WEB-INF/classes">

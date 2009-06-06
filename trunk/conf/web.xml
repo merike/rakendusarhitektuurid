@@ -9,6 +9,10 @@
 	<description>
 		E-poe haldaja töökoht, kaubakataloogide ja kaupade haldamine
 	</description>
+	
+	<listener>
+        <listener-class>ee.ttu.t061879.EPOOD2.utils.HibernateListener</listener-class>
+ 	</listener>
   
 	<filter>
         <filter-name>UrlRewriteFilter</filter-name>
