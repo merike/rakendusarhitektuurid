@@ -163,6 +163,16 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/ProductSearch.jsp")
 				.forward(request, response);
 			}
+			else if(mode != null && mode.equalsIgnoreCase("ProductList")
+					&& submode != null){
+				logger.log("controller: ProductList", "DEBUG");
+				CatalogModel model_c = new CatalogModel();
+				model_c.get(request, response);
+				ProductModel model = new ProductModel();
+				model.list(request, response);
+				getServletContext().getRequestDispatcher("/ProductList.jsp")
+				.forward(request, response);
+			}
 			else if(mode != null && mode.equalsIgnoreCase("ProductView")
 					&& submode != null){
 				logger.log("controller: ProductView", "DEBUG");
