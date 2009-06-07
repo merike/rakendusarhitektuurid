@@ -8,7 +8,6 @@
 		<id name="product" type="java.lang.Integer" column="product">
 			<generator class="increment" />
 		</id>
-		<property name="enterprise" />
 		<property name="catalog" />
 		<property name="price" />
 		<property name="code" />
@@ -21,5 +20,7 @@
 			column="created_by" insert="false" update="false"/>
 		<many-to-one name="updatedBy" class="ee.ttu.t061879.EPOOD2.data.Employee" 
 			column="updated_by" insert="false" update="false"/>
+		<many-to-one name="enterprise" class="ee.ttu.t061879.EPOOD2.data.Enterprise" 
+			column="enterprise" insert="false" update="false"/>
 	</class>
 </hibernate-mapping>

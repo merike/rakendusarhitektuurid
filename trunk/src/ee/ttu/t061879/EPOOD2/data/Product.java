@@ -4,8 +4,7 @@ import java.sql.Date;
 
 public class Product {
 	private int product,
-		catalog,
-		enterprise;
+		catalog;
 		
 	private double price;
 	
@@ -17,6 +16,16 @@ public class Product {
 	private Date created,
 		updated;
 	
+	private Enterprise enterprise;
+
+	public Enterprise getEnterprise() {
+		return enterprise;
+	}
+	
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
 	public int getCatalog() {
 		return catalog;
 	}
@@ -50,14 +59,6 @@ public class Product {
 
 	public void setProduct(int product) {
 		this.product = product;
-	}
-
-	public int getEnterprise() {
-		return enterprise;
-	}
-
-	public void setEnterprise(int enterprise) {
-		this.enterprise = enterprise;
 	}
 
 	public double getPrice() {
