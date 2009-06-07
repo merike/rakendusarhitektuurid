@@ -1,5 +1,9 @@
 package ee.ttu.t061879.EPOOD2.dao;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -20,10 +24,13 @@ public class ProductDAO {
 	private Query q;
 	private int structUnit;
 	private Log logger;
+	private Statement statement;
+	private Connection connection;
 	
 	public ProductDAO() {
 		logger = new Log();
 		this.session = HibernateUtil.getSessionFactory().getCurrentSession();
+		this.connection = DatabaseConnection.getDatabaseConnection();
 		ResourceBundle b = ResourceBundle.getBundle("app-config");
 		this.structUnit = Integer.parseInt(b.getString("struct_unit"));
 	}
@@ -34,16 +41,21 @@ public class ProductDAO {
 		try{
 			this.session.beginTransaction();
 			logger.log("1:" + product, "DEBUG");
-			q = session.createQuery("FROM Product AS P WHERE P.product = :p_id");
+			String query = "from Product as p left join p.enterprise as e left join p.createdBy as creator "
+				+ "left join p.updatedBy as updater where p.product = :p_id";
+			q = session.createQuery(query);
 			logger.log("2:" + product, "DEBUG");
 			q.setInteger("p_id", product);
 			
 			logger.log(q.getQueryString(), "INFO");
 			
-			Product p = (Product)q.uniqueResult();
-			logger.log("3:" + product, "DEBUG");
-			if(p == null) logger.log("null", "DEBUG");
-			return p;
+			Iterator i = q.list().iterator();
+		    if(i.hasNext()){
+		    	Object[] o = (Object[])i.next();
+		    	return (Product)o[0];
+		    }
+			
+			return null;
 		}
 		catch(HibernateException e){
 			logger.log("ProductDAO.getProduct() " + e.toString(), "ERROR");
@@ -127,5 +139,38 @@ public class ProductDAO {
 		}
 		
 		return ps;
+	}
+	
+	public boolean editProduct(Product p, int user){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			CallableStatement cs;
+			String sql = "{call edit_product(?, ?, ?, ?, ?, ?, ?)}";
+			cs = connection.prepareCall(sql);
+			
+			cs.setInt(1, p.getProduct());
+			cs.setString(2, p.getName());
+			cs.setString(3, p.getDescription());
+			cs.setString(4, p.getCode());
+			cs.setInt(5, p.getEnterprise().getEnterprise());
+			logger.log("ent: " + p.getEnterprise().getEnterprise(), "DEBUG");
+			cs.setInt(6, user);
+			cs.registerOutParameter(7, Types.INTEGER);
+			logger.log(cs.toString(), "INFO");
+			
+			cs.executeUpdate();
+			if(cs.getInt(7) == 0) result = true;
+			else{
+				logger.log("edit proc: " + cs.getInt(7), "ERROR");
+			}
+		}
+		catch(Exception e){
+			logger.log("CatalogDAO.editProduct() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
 	}
 }

@@ -196,3 +196,49 @@ BEGIN
 		
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION edit_product
+(
+	id INT,
+	nimi TEXT,
+	kirjeldus TEXT,
+	kood TEXT,
+	tootja INT,
+	muutja INT, 
+	OUT tulemus INT
+)
+AS $$
+DECLARE
+	pr product.product%TYPE;
+	e enterprise.enterprise%TYPE;
+	err_msg TEXT;
+
+BEGIN
+	SELECT product INTO pr FROM product 
+	WHERE product = id;
+	
+	IF FOUND THEN
+		SELECT enterprise INTO e FROM enterprise
+		WHERE enterprise = tootja;
+		
+		IF FOUND THEN
+			UPDATE product SET name = nimi, description = kirjeldus, code = kood, enterprise = tootja,
+			updated_by = muutja, updated = NOW();
+			SELECT 0 INTO tulemus;
+		ELSE
+			SELECT 2 INTO tulemus;
+		END IF;
+	ELSE
+		SELECT 1 INTO tulemus; 
+	END IF;
+		
+	EXCEPTION WHEN raise_exception THEN 
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+        RAISE EXCEPTION '%', err_msg ; 
+		WHEN OTHERS THEN
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+		RAISE EXCEPTION 'SQL: %', err_msg ;
+		
+END;
+$$ LANGUAGE plpgsql;

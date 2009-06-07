@@ -181,6 +181,25 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/ProductView.jsp")
 				.forward(request, response);
 			}
+			else if(mode != null && mode.equalsIgnoreCase("EditProductSubmit")){
+				logger.log("controller: EditProductSubmit", "DEBUG");
+				ProductModel model = new ProductModel();
+				model.edit(request, response);
+				
+				boolean r = (Boolean)request.getAttribute("editResult");
+				if(r){
+					logger.log("controller: product edit successful", "DEBUG");
+					model.get(request, response);
+					getServletContext().getRequestDispatcher("/ProductView.jsp")
+					.forward(request, response);
+				}
+				else{
+					logger.log("controller: product edit unsuccessful", "DEBUG");
+					model.get(request, response);
+					getServletContext().getRequestDispatcher("/ProductView.jsp")
+					.forward(request, response);
+				}
+			}
 			else{
 				logger.log("controller: default", "DEBUG");
 				CatalogModel model = new CatalogModel();

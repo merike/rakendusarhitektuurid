@@ -22,7 +22,7 @@
 
 /* forms */
 
-form input, form textarea{
+form input, form textarea, form select{
 	float:right;
 	clear:right;
 	margin-left:0.2em;
