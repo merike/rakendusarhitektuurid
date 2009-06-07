@@ -101,6 +101,7 @@ public class ProductDAO {
 		    	Employee u = (Employee) o[2];
 		    	
 		    	Product pr = new Product();
+		    	pr.setProduct(p.getProduct());
 		    	pr.setName(p.getName());
 		    	pr.setDescription(p.getDescription());
 		    	pr.setPrice(p.getPrice());

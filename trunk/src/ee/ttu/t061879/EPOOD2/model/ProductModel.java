@@ -64,4 +64,20 @@ public class ProductModel {
 			logger.log("ProductModel.search() " + e.getMessage(), "ERROR");
 		}
 	}
+	
+	public void list(HttpServletRequest request, HttpServletResponse response){
+		ProductSearch s = new ProductSearch();
+		
+		ArrayList<Catalog> cs = (ArrayList<Catalog>)request.getSession().getAttribute("rememberedCatalogs");
+		int catalog = Integer.parseInt(request.getParameter("submode"));
+		s.addCatalog(catalog); 
+				
+		try{
+			ProductDAO dao = new ProductDAO();
+			request.setAttribute("ProductList", dao.productSearch(s));
+		}
+		catch (Exception e) {
+			logger.log("ProductModel.list() " + e.getMessage(), "ERROR");
+		}
+	}
 }
