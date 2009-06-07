@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="ee.ttu.t061879.EPOOD2.data.Employee" table="employee">
+		<id name="employee" type="java.lang.Integer" column="employee">
+			<generator class="increment" />
+		</id>
+		
+		<property name="firstName" column="first_name" />
+		<property name="lastName" column="last_name" />
+		<!--<property name="fullName" formula="first_name || ' ' || last_name"/>-->
+
+	</class>
+</hibernate-mapping>

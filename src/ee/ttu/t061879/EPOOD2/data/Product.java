@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Product {
 	private int product,
+		catalog,
 		enterprise;
 		
 	private double price;
@@ -15,6 +16,33 @@ public class Product {
 		
 	private Date created,
 		updated;
+	
+	public int getCatalog() {
+		return catalog;
+	}
+
+	public void setCatalog(int catalog) {
+		this.catalog = catalog;
+	}
+
+	private Employee createdBy, 
+		updatedBy;
+
+	public Employee getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Employee createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Employee getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(Employee updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	public int getProduct() {
 		return product;
