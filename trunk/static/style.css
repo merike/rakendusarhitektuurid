@@ -1,6 +1,7 @@
 
 #content{
 	float:left;
+	max-width:750px;
 }
 
 #sidebar{
@@ -41,4 +42,28 @@ form li{
 
 form ul{
 	padding:0;
+}
+
+form span.form_error{
+	display:block; 
+	color:red;
+	text-align:right; 
+	width:100%;
+}
+
+/* tables */
+table{
+	border-spacing:0;
+}
+
+thead{
+	background:#bbccff;
+}
+
+tr.even{
+	background:#eeeeff;
+}
+
+td{
+	padding:0.2em 0.4em;
 }

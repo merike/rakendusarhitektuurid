@@ -12,9 +12,12 @@
 	for(Catalog top : list){
 		out.println("<li><span title='" + top.getDescription() + "'>");
 		out.println(top.getName()
-				+ "</span> <a href='" + request.getContextPath()
-				+ "/EditCatalog/" + top.getProductCatalog() + "/" 
-				+ "'>Muuda</a>");
+			+ "</span> <a href='" + request.getContextPath()
+			+ "/EditCatalog/" + top.getProductCatalog() + "/" 
+			+ "'>Muuda</a>"
+			+ " <a href='" + request.getContextPath()
+			+ "/CatalogList/" + top.getProductCatalog() + "/" 
+			+ "'>+</a>");
 		
 		Collection<Catalog> subs = top.getSubCatalogs();
 		out.println("<ul>");

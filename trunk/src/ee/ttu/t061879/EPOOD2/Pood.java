@@ -155,6 +155,11 @@ public class Pood extends HttpServlet{
 			}
 			else if(mode != null && mode.equalsIgnoreCase("ProductSearch")){
 				logger.log("controller: ProductSearch", "DEBUG");
+				if(request.getParameter("otsi") != null){
+					ProductModel model = new ProductModel();
+					model.search(request, response);
+					if(request.getAttribute("search") != null) logger.log("luck!", "DEBUG");
+				}
 				getServletContext().getRequestDispatcher("/ProductSearch.jsp")
 				.forward(request, response);
 			}

@@ -7,14 +7,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
-	<div id="content">
-	<% out.println(request.getAttribute("mode"));
-		out.println(request.getAttribute("submode")); %>
-	<jsp:include page="Menu.jsp"></jsp:include>
-	<%
-		if(request.getAttribute("info") != null){
-			out.println("<p>" + request.getAttribute("info") + "</p>");
-		}
-	
-	
-	%>
+	<div id="container">
+		<div id="sidebar">
+			<jsp:include page="UserInfo.jsp"></jsp:include>
+			<jsp:include page="RememberedCatalogs.jsp"></jsp:include>
+		</div>
+		
+		<div id="content">
+			<% out.println(request.getAttribute("mode"));
+				out.println(request.getAttribute("submode")); %>
+			<jsp:include page="Menu.jsp"></jsp:include>
+			<%
+				if(request.getAttribute("info") != null){
+					out.println("<p>" + request.getAttribute("info") + "</p>");
+				}
+			
+			
+			%>
