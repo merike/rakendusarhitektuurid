@@ -54,4 +54,9 @@ public class Auth {
 		
 		return (u != null);
 	}
+	
+	public void logout(HttpServletRequest request){
+		request.getSession().setAttribute("user", null);
+		request.getSession().setAttribute("auth", null);
+	}
 }

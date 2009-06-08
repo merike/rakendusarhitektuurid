@@ -16,7 +16,7 @@
 			+ "</a></span> <a href='" + request.getContextPath()
 			+ "/EditCatalog/" + top.getProductCatalog() + "/" 
 			+ "'>Muuda</a>"
-			+ " <a href='" + request.getContextPath()
+			+ " <a class='add_link' href='" + request.getContextPath()
 			+ "/CatalogList/" + top.getProductCatalog() + "/" 
 			+ "'>+</a>");
 		
@@ -30,7 +30,7 @@
 				+ "/EditCatalog/" + sub.getProductCatalog() + "/" 
 				+ "'>Muuda</a>"
 				
-				+ " <a href='" + request.getContextPath()
+				+ " <a class='add_link' href='" + request.getContextPath()
 				+ "/CatalogList/" + sub.getProductCatalog() + "/" 
 				+ "'>+</a>"
 				+ "</li>");

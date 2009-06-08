@@ -8,6 +8,10 @@
 	float:right;
 }
 
+a.add_link{
+	text-decoration:none;
+}
+
 /* sidebar boxes */
 #userinfo, #rememberedCatalogs{
 	border-top:10px solid #004477;

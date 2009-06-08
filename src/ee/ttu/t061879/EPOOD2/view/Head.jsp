@@ -14,8 +14,6 @@
 		</div>
 		
 		<div id="content">
-			<% out.println(request.getAttribute("mode"));
-				out.println(request.getAttribute("submode")); %>
 			<jsp:include page="Menu.jsp"></jsp:include>
 			<%
 				if(request.getAttribute("info") != null){

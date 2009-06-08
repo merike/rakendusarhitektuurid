@@ -12,6 +12,7 @@ if(u != null){ %>
 	out.print("roll: " + u.getEmpRole() + "<br />");
 	out.print("kasutajanimi: " + u.getUserName() + "<br />");
 	out.print(request.getSession().getAttribute("auth"));
+	out.print("<br /><a href='" + request.getContextPath() + "/Logout/'>Lahku</a>");
 }
 else{
 	out.println("Kasutajainfo puudub.");
