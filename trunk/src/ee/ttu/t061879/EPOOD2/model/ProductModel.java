@@ -114,9 +114,9 @@ public class ProductModel {
 		User u;
 		
 		try{
-			price = Integer.parseInt(request.getParameter("hind"));
+			price = Utils.number(request.getParameter("hind"));
 			enterprise = Integer.parseInt(request.getParameter("tootja"));
-			product = Integer.parseInt(request.getParameter("submode")); 
+			product = Integer.parseInt(request.getParameter("submode"));
 			u = (User)(request.getSession().getAttribute("user"));
 			
 			p.setProduct(product);
@@ -132,7 +132,7 @@ public class ProductModel {
 			result = dao.editProduct(p, u.getEmpUser());
 		}
 		catch (Exception e) {
-			logger.log("ProductModel.edit() ", "ERROR");
+			logger.log("ProductModel.edit() " + e.getMessage(), "ERROR");
 		}
 		
 		if(result == true){

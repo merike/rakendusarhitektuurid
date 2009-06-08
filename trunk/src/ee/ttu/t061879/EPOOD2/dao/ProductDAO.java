@@ -104,7 +104,10 @@ public class ProductDAO {
 				hql += ")";
 			}
 			
+//			hql += " LIMIT 100";
+			
 			q = session.createQuery(hql);
+			q.setMaxResults(100);
 			logger.log(q.getQueryString(), "INFO");
 			
 			Iterator i = q.list().iterator();
