@@ -225,7 +225,7 @@ BEGIN
 		
 		IF FOUND THEN
 			UPDATE product SET name = nimi, description = kirjeldus, code = kood, enterprise = tootja,
-			price = hind, updated_by = muutja, updated = NOW();
+			price = hind, updated_by = muutja, updated = NOW() WHERE product = id;
 			SELECT 0 INTO tulemus;
 		ELSE
 			SELECT 2 INTO tulemus;
