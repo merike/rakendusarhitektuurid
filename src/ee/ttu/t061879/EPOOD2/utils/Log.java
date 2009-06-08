@@ -11,7 +11,10 @@ public class Log {
   }
   
   public void log(String message, String level) {
-	logger.info(level + " " + message);
-	System.out.println(message);
+//	if(level.equalsIgnoreCase("info")) logger.info(level + " " + message);
+//	else if (level.equalsIgnoreCase("debug")) logger.debug(level + " " + message);
+//	else logger.error((level + " " + message));
+	  logger.info(level + " " + message);
+	System.out.println(level + " " + message);
   }
 }

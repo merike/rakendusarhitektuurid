@@ -9,9 +9,11 @@ import ee.ttu.t061879.EPOOD2.dao.CatalogDAO;
 import ee.ttu.t061879.EPOOD2.dao.EnterpriseDAO;
 import ee.ttu.t061879.EPOOD2.dao.ProductDAO;
 import ee.ttu.t061879.EPOOD2.data.Catalog;
+import ee.ttu.t061879.EPOOD2.data.Enterprise;
 import ee.ttu.t061879.EPOOD2.data.Product;
 import ee.ttu.t061879.EPOOD2.data.User;
 import ee.ttu.t061879.EPOOD2.utils.Log;
+import ee.ttu.t061879.EPOOD2.utils.Utils;
 import ee.ttu.t061879.EPOOD2.validate.ProductSearch;
 import ee.ttu.t061879.EPOOD2.validate.ProductSearchValidator;
 
@@ -87,10 +89,25 @@ public class ProductModel {
 		}
 	}
 	
+	public void add(HttpServletRequest request, HttpServletResponse response){
+		try{
+			int catalog;
+			catalog = Integer.parseInt((String)request.getAttribute("submode"));
+			EnterpriseDAO dao = new EnterpriseDAO();
+			CatalogDAO cdao = new CatalogDAO();
+			request.setAttribute("catalog", cdao.getCatalog(catalog));
+			request.setAttribute("enterprise_list", dao.list());
+		}
+		catch (Exception e) {
+			logger.log("ProductModel.add() " + e.getMessage(), "ERROR");
+		}
+	}
+	
 	public void edit(HttpServletRequest request, HttpServletResponse response){
 		String desc = request.getParameter("kirjeldus");
 		String name = request.getParameter("nimi");
 		String code = request.getParameter("kood");
+		double price;
 		int enterprise;
 		int product;
 		boolean result = false;
@@ -98,6 +115,7 @@ public class ProductModel {
 		User u;
 		
 		try{
+			price = Integer.parseInt(request.getParameter("hind"));
 			enterprise = Integer.parseInt(request.getParameter("tootja"));
 			product = Integer.parseInt(request.getParameter("submode")); 
 			u = (User)(request.getSession().getAttribute("user"));
@@ -106,6 +124,7 @@ public class ProductModel {
 			p.setName(name);
 			p.setDescription(desc);
 			p.setCode(code);
+			p.setPrice(price);
 			
 			EnterpriseDAO edao = new EnterpriseDAO();
 			p.setEnterprise(edao.get(enterprise));
@@ -127,5 +146,52 @@ public class ProductModel {
 			request.setAttribute("info", "Toote salvestamine ebaõnnestus!");
 			request.setAttribute("product", p);
 		}
+	}
+	
+	public void addProduct(HttpServletRequest request, HttpServletResponse response){
+		String desc = request.getParameter("kirjeldus");
+		String name = request.getParameter("nimi");
+		String code = request.getParameter("kood");
+		int enterprise;
+		double price;
+		
+		Product p = new Product();
+		User u = (User)(request.getSession().getAttribute("user"));
+		
+		p.setName(name);
+		p.setDescription(desc);
+		p.setCode(code);
+		
+		int catalog;
+	
+		try{
+			// assume worst
+			request.setAttribute("insertResult", false);
+			request.setAttribute("info", "Toote sisestamine ebaõnnestus!");
+			
+			enterprise = Integer.parseInt(request.getParameter("tootja"));
+			catalog = Integer.parseInt(request.getParameter("submode"));
+			p.setCatalog(catalog);
+			price = Utils.number((String)request.getParameter("hind"));
+			p.setPrice(price);
+			
+			EnterpriseDAO edao = new EnterpriseDAO();
+			p.setEnterprise(edao.get(enterprise));
+			
+			ProductDAO dao = new ProductDAO();
+			boolean result = dao.addProduct(p, u);
+			
+			if(result == true){
+				request.setAttribute("insertResult", true);
+				request.setAttribute("info", "Toote sisestamine õnnestus.");
+				this.list(request, response);
+			}
+			else{
+				request.setAttribute("product", p);
+			}
+		}
+		catch(Exception e){
+			logger.log("ProductModel.addProduct() " + e.getMessage(), "ERROR");
+		}	
 	}
 }

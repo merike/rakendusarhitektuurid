@@ -12,8 +12,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import ee.ttu.t061879.EPOOD2.data.Catalog;
 import ee.ttu.t061879.EPOOD2.data.Employee;
 import ee.ttu.t061879.EPOOD2.data.Product;
+import ee.ttu.t061879.EPOOD2.data.User;
 import ee.ttu.t061879.EPOOD2.utils.HibernateUtil;
 import ee.ttu.t061879.EPOOD2.utils.Log;
 import ee.ttu.t061879.EPOOD2.utils.Utils;
@@ -148,7 +150,7 @@ public class ProductDAO {
 			this.statement = connection.createStatement();
 			
 			CallableStatement cs;
-			String sql = "{call edit_product(?, ?, ?, ?, ?, ?, ?)}";
+			String sql = "{call edit_product(?, ?, ?, ?, ?, ?, ?, ?)}";
 			cs = connection.prepareCall(sql);
 			
 			cs.setInt(1, p.getProduct());
@@ -156,19 +158,52 @@ public class ProductDAO {
 			cs.setString(3, p.getDescription());
 			cs.setString(4, p.getCode());
 			cs.setInt(5, p.getEnterprise().getEnterprise());
+			cs.setDouble(6, p.getPrice());
 			logger.log("ent: " + p.getEnterprise().getEnterprise(), "DEBUG");
-			cs.setInt(6, user);
-			cs.registerOutParameter(7, Types.INTEGER);
+			cs.setInt(7, user);
+			cs.registerOutParameter(8, Types.INTEGER);
 			logger.log(cs.toString(), "INFO");
 			
 			cs.executeUpdate();
-			if(cs.getInt(7) == 0) result = true;
+			if(cs.getInt(8) == 0) result = true;
 			else{
-				logger.log("edit proc: " + cs.getInt(7), "ERROR");
+				logger.log("edit proc: " + cs.getInt(8), "ERROR");
 			}
 		}
 		catch(Exception e){
 			logger.log("CatalogDAO.editProduct() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
+	}
+	
+	public boolean addProduct(Product p, User u){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			CallableStatement cs;
+			String sql = "{call add_product(?, ?, ?, ?, ?, ?, ?, ?)}";
+			cs = connection.prepareCall(sql);
+
+			cs.setString(1, p.getName());
+			cs.setString(2, p.getDescription());
+			cs.setString(3, p.getCode());
+			cs.setDouble(4, p.getPrice());
+			cs.setInt(5, p.getEnterprise().getEnterprise());
+			cs.setInt(6, p.getCatalog());
+			cs.setInt(7, u.getEmpUser());
+
+			cs.registerOutParameter(8, Types.INTEGER);
+			logger.log(cs.toString(), "INFO");
+			cs.executeUpdate();
+			logger.log("9", "INFO");
+			if(cs.getInt(8) > 0) result = true;
+			else logger.log("product add: " + cs.getInt(8), "ERROR");
+		}
+		catch(Exception e){
+			logger.log("ProductDAO.addProduct() " + e.getMessage(), "ERROR");
 		}
 		
 		return result;

@@ -12,7 +12,7 @@ if(request.getAttribute("product_search_results") != null){
 	else{
 		out.println("Sobivad tooted:");
 		out.println("<table><thead><tr><td>Nimi</td><td>Kirjeldus</td><td>Hind</td>");
-		out.println("<td>Sisestaja</td><td>Sisestatud</td><td>Muutja</td><td>Muudetud</td></tr></thead>");
+		out.println("<td>Sisestaja</td><td>Sisestatud</td><td>Muutja</td><td>Muudetud</td><td></td></tr></thead>");
 		out.println("<tbody>");
 		int i = 1;
 		for(Product p : ps){
@@ -25,6 +25,8 @@ if(request.getAttribute("product_search_results") != null){
 			out.println("<td>" + Utils.localDate(p.getCreated() + "") + "</td>");
 			out.println("<td>" + p.getUpdatedBy().getFullName() + "</td>");
 			out.println("<td>" + Utils.localDate(p.getUpdated() + "") + "</td>");
+			out.println("<td><a href='" + request.getContextPath() + "/ProductView/" + p.getProduct() 
+					+ "/'>Muuda</a></td>");
 			out.println("</tr>");
 			i++;
 		}

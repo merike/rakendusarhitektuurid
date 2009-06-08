@@ -153,6 +153,7 @@ public class Pood extends HttpServlet{
 					.forward(request, response);
 				}
 			}
+			
 			else if(mode != null && mode.equalsIgnoreCase("ProductSearch")){
 				logger.log("controller: ProductSearch", "DEBUG");
 				if(request.getParameter("otsi") != null){
@@ -181,7 +182,8 @@ public class Pood extends HttpServlet{
 				getServletContext().getRequestDispatcher("/ProductView.jsp")
 				.forward(request, response);
 			}
-			else if(mode != null && mode.equalsIgnoreCase("EditProductSubmit")){
+			else if(mode != null && mode.equalsIgnoreCase("EditProductSubmit")
+					&& submode != null){
 				logger.log("controller: EditProductSubmit", "DEBUG");
 				ProductModel model = new ProductModel();
 				model.edit(request, response);
@@ -197,6 +199,37 @@ public class Pood extends HttpServlet{
 					logger.log("controller: product edit unsuccessful", "DEBUG");
 					model.get(request, response);
 					getServletContext().getRequestDispatcher("/ProductView.jsp")
+					.forward(request, response);
+				}
+			}
+			else if(mode != null && mode.equalsIgnoreCase("AddProduct")
+					&& submode != null){
+				logger.log("controller: AddProduct", "DEBUG");
+				ProductModel model = new ProductModel();
+				model.add(request, response);
+				getServletContext().getRequestDispatcher("/AddProduct.jsp")
+				.forward(request, response);
+			}
+			else if(mode != null && mode.equalsIgnoreCase("AddProductSubmit")
+					&& submode != null){
+				logger.log("controller: AddProductSubmit", "DEBUG");
+				ProductModel model = new ProductModel();
+				model.addProduct(request, response);
+				
+				boolean r = (Boolean)request.getAttribute("insertResult");
+				if(r){
+					logger.log("controller product insert successful", "DEBUG");
+					model.add(request, response);
+					CatalogModel model_c = new CatalogModel();
+					model_c.get(request, response);
+					model.list(request, response);
+					getServletContext().getRequestDispatcher("/ProductList.jsp")
+					.forward(request, response);
+				}
+				else{
+					logger.log("controller product insert unsuccessful", "DEBUG");
+					model.add(request, response);
+					getServletContext().getRequestDispatcher("/AddProduct.jsp")
 					.forward(request, response);
 				}
 			}
