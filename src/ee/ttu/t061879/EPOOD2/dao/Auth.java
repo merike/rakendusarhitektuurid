@@ -32,8 +32,10 @@ public class Auth {
 					"' AND passw = MD5('" + password + "');"; 
 			logger.log(sql, "INFO");
 			set = statement.executeQuery(sql);
+			boolean found = false;
 			
 			while(set.next()){
+				found = true;
 				u = new User();
 				u.setEmpUser(set.getInt("emp_user"));
 				u.setFirstName(set.getString("first_name"));
@@ -42,6 +44,8 @@ public class Auth {
 				u.setEmpRole(set.getString("emp_role"));
 				u.setCurrentStructUnit(set.getInt("current_struct_unit"));
 			}
+			
+			logger.log("no user found", "INFO");
 			
 			if(u != null){
 				request.getSession().setAttribute("user", u);
