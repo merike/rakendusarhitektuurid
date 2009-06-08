@@ -66,6 +66,13 @@ public class Pood extends HttpServlet{
 					.forward(request, response);
 				}
 			} // end login
+			else if(mode != null && mode.equalsIgnoreCase("Logout")){
+				logger.log("controller: Logout", "DEBUG");
+				Auth a = new Auth();
+				a.logout(request);
+				getServletContext().getRequestDispatcher("/Login.jsp")
+				.forward(request, response);
+			}
 			else if(request.getSession().getAttribute("auth") == null){
 				logger.log("controller: not authenticated", "DEBUG");
 				getServletContext().getRequestDispatcher("/Login.jsp")
