@@ -132,7 +132,7 @@ public class Pood extends HttpServlet{
 			else if(mode != null && mode.equalsIgnoreCase("EditCatalog")){
 				logger.log("controller: EditCatalog", "DEBUG");
 				CatalogModel model = new CatalogModel();
-				model.get(request, response);
+				model.get(request.getParameter("submode"), request);
 				getServletContext().getRequestDispatcher("/EditCatalog.jsp")
 				.forward(request, response);
 			}
@@ -168,9 +168,9 @@ public class Pood extends HttpServlet{
 					&& submode != null){
 				logger.log("controller: ProductList", "DEBUG");
 				CatalogModel model_c = new CatalogModel();
-				model_c.get(request, response);
+				model_c.get(request.getParameter("submode"), request);
 				ProductModel model = new ProductModel();
-				model.list(request, response);
+				model.list(request.getParameter("submode"), request);
 				getServletContext().getRequestDispatcher("/ProductList.jsp")
 				.forward(request, response);
 			}
@@ -221,8 +221,8 @@ public class Pood extends HttpServlet{
 					logger.log("controller product insert successful", "DEBUG");
 					model.add(request, response);
 					CatalogModel model_c = new CatalogModel();
-					model_c.get(request, response);
-					model.list(request, response);
+					model_c.get(request.getParameter("submode"), request);
+					model.list(request.getParameter("submode"), request);
 					getServletContext().getRequestDispatcher("/ProductList.jsp")
 					.forward(request, response);
 				}
@@ -232,6 +232,14 @@ public class Pood extends HttpServlet{
 					getServletContext().getRequestDispatcher("/AddProduct.jsp")
 					.forward(request, response);
 				}
+			}
+			else if(mode != null && mode.equalsIgnoreCase("ProductDelete")
+					&& submode != null){
+				logger.log("controller: ProductDelete", "DEBUG");
+				ProductModel model = new ProductModel();
+				model.delete(request, response);
+				getServletContext().getRequestDispatcher("/ProductList.jsp")
+				.forward(request, response);
 			}
 			else{
 				logger.log("controller: default", "DEBUG");

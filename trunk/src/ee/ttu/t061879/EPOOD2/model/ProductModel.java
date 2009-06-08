@@ -73,14 +73,13 @@ public class ProductModel {
 		}
 	}
 	
-	public void list(HttpServletRequest request, HttpServletResponse response){
+	public void list(String catalog, HttpServletRequest request){
 		ProductSearch s = new ProductSearch();
 		
 		ArrayList<Catalog> cs = (ArrayList<Catalog>)request.getSession().getAttribute("rememberedCatalogs");
-		int catalog = Integer.parseInt(request.getParameter("submode"));
-		s.addCatalog(catalog); 
 				
 		try{
+			s.addCatalog(Integer.parseInt(catalog));
 			ProductDAO dao = new ProductDAO();
 			request.setAttribute("ProductList", dao.productSearch(s));
 		}
@@ -184,7 +183,7 @@ public class ProductModel {
 			if(result == true){
 				request.setAttribute("insertResult", true);
 				request.setAttribute("info", "Toote sisestamine õnnestus.");
-				this.list(request, response);
+				this.list(catalog + "", request);
 			}
 			else{
 				request.setAttribute("product", p);
@@ -192,6 +191,40 @@ public class ProductModel {
 		}
 		catch(Exception e){
 			logger.log("ProductModel.addProduct() " + e.getMessage(), "ERROR");
+		}	
+	}
+	
+	public void delete(HttpServletRequest request, HttpServletResponse response){
+		int product;
+		Product p;
+		
+		try{
+			// assume worst
+			request.setAttribute("insertResult", false);
+			request.setAttribute("info", "Toote kustutamine ebaõnnestus!");
+			
+			product = Integer.parseInt(request.getParameter("submode"));
+			
+			ProductDAO dao = new ProductDAO();
+			p = dao.getProduct(product);
+			this.list(p.getCatalog() + "", request);
+			boolean result = dao.delete(product);
+			
+			CatalogDAO cdao = new CatalogDAO();
+			request.setAttribute("catalog", cdao.getCatalog(p.getCatalog()));
+			
+			if(result == true){
+				request.setAttribute("insertResult", true);
+				request.setAttribute("info", "Toote kustutamine õnnestus.");
+				this.list(p.getCatalog() + "", request);
+				logger.log("controller: product delete successful", "DEBUG");
+			}
+			else{
+				logger.log("controller: product delete unsuccessful", "DEBUG");
+			}
+		}
+		catch(Exception e){
+			logger.log("ProductModel.delete() " + e.getMessage(), "ERROR");
 		}	
 	}
 }
