@@ -61,9 +61,9 @@ public class CatalogModel {
 		}
 	}
 	
-	public void get(HttpServletRequest request, HttpServletResponse response){
+	public void get(String catalog, HttpServletRequest request){
 		try{
-			int product_catalog = Integer.parseInt(request.getParameter("submode")); 
+			int product_catalog = Integer.parseInt(catalog); 
 			CatalogDAO dao = new CatalogDAO();
 			request.setAttribute("catalog", dao.getCatalog(product_catalog));
 		}

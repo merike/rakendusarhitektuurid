@@ -33,7 +33,9 @@
 			out.println("<td>" + p.getUpdatedBy().getFullName() + "</td>");
 			out.println("<td>" + Utils.localDate(p.getUpdated() + "") + "</td>");
 			out.println("<td><a href='" + request.getContextPath() + "/ProductView/" + p.getProduct() 
-					+ "/'>Muuda</a></td>");
+					+ "/'>Muuda</a> ");
+			out.println("<a href='" + request.getContextPath() + "/ProductDelete/" + p.getProduct() 
+					+ "/'>Kustuta</a></td>");
 			out.println("</tr>");
 			i++;
 		}

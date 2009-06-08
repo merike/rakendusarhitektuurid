@@ -12,7 +12,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import ee.ttu.t061879.EPOOD2.data.Catalog;
 import ee.ttu.t061879.EPOOD2.data.Employee;
 import ee.ttu.t061879.EPOOD2.data.Product;
 import ee.ttu.t061879.EPOOD2.data.User;
@@ -79,7 +78,8 @@ public class ProductDAO {
 		
 		try{
 			this.session.beginTransaction();
-			String hql = "from Product as p left join p.createdBy as creator left join p.updatedBy as updater ";
+			String hql = "from Product as p left join p.createdBy as creator "
+				+ "left join p.updatedBy as updater ";
 			
 			hql += "WHERE 1=1 ";
 			if(s.getName().length() > 0) hql += "AND upper(name) LIKE upper('" + s.getName() + "%') ";
@@ -198,9 +198,35 @@ public class ProductDAO {
 			cs.registerOutParameter(8, Types.INTEGER);
 			logger.log(cs.toString(), "INFO");
 			cs.executeUpdate();
-			logger.log("9", "INFO");
+			logger.log("9", "DEBUG");
 			if(cs.getInt(8) > 0) result = true;
-			else logger.log("product add: " + cs.getInt(8), "ERROR");
+			else logger.log("product add: " + cs.getInt(8), "DEBUG");
+		}
+		catch(Exception e){
+			logger.log("ProductDAO.addProduct() " + e.getMessage(), "ERROR");
+		}
+		
+		return result;
+	}
+	
+	public boolean delete(int product){
+		boolean result = false;
+		
+		try{
+			this.statement = connection.createStatement();
+			
+			CallableStatement cs;
+			String sql = "{call delete_product(?, ?)}";
+			cs = connection.prepareCall(sql);
+
+			cs.setInt(1, product);
+			
+			cs.registerOutParameter(2, Types.INTEGER);
+			logger.log(cs.toString(), "INFO");
+			cs.executeUpdate();
+			logger.log("9", "DEBUG");
+			if(cs.getInt(2) == 0) result = true;
+			else logger.log("product add: " + cs.getInt(2), "ERROR");
 		}
 		catch(Exception e){
 			logger.log("ProductDAO.addProduct() " + e.getMessage(), "ERROR");

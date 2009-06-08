@@ -289,3 +289,35 @@ BEGIN
 		
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION delete_product
+(
+	toode INT, 
+	OUT tulemus INT
+)
+AS $$
+DECLARE
+	pr product.product%TYPE;
+	err_msg TEXT;
+
+BEGIN
+	SELECT product INTO pr FROM product WHERE product = toode;
+	IF FOUND THEN
+		DELETE FROM product WHERE product = toode;
+		DELETE FROM product_product_catalog WHERE product = toode;
+		
+		SELECT 0 INTO tulemus;
+	ELSE 
+		SELECT 1 INTO tulemus;
+	END IF;
+		
+	EXCEPTION WHEN raise_exception THEN 
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+        RAISE EXCEPTION '%', err_msg ; 
+		WHEN OTHERS THEN
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+		RAISE EXCEPTION 'SQL: %', err_msg ;
+		
+END;
+$$ LANGUAGE plpgsql;
