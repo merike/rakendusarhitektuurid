@@ -28,6 +28,12 @@
 					out.println("</textarea><br>"); %>
 			</li>
 			<li>
+				<label for="hind">Toote hind</label>
+				<% out.print("<input id='hind' name='hind' value='" 
+						+ p.getPrice()
+						+ "' size='35' /><br>"); %>
+			</li>
+			<li>
 				<label for="kood">Tootekood</label>
 				<% out.print("<input id='kood' name='kood' value='" 
 						+ p.getCode() 

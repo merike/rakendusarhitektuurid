@@ -205,6 +205,7 @@ CREATE OR REPLACE FUNCTION edit_product
 	kirjeldus TEXT,
 	kood TEXT,
 	tootja INT,
+	hind DOUBLE PRECISION,
 	muutja INT, 
 	OUT tulemus INT
 )
@@ -224,13 +225,59 @@ BEGIN
 		
 		IF FOUND THEN
 			UPDATE product SET name = nimi, description = kirjeldus, code = kood, enterprise = tootja,
-			updated_by = muutja, updated = NOW();
+			price = hind, updated_by = muutja, updated = NOW();
 			SELECT 0 INTO tulemus;
 		ELSE
 			SELECT 2 INTO tulemus;
 		END IF;
 	ELSE
 		SELECT 1 INTO tulemus; 
+	END IF;
+		
+	EXCEPTION WHEN raise_exception THEN 
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+        RAISE EXCEPTION '%', err_msg ; 
+		WHEN OTHERS THEN
+		err_msg := SQLSTATE || ': ' || SQLERRM;
+		RAISE EXCEPTION 'SQL: %', err_msg ;
+		
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION add_product
+(
+	nimi TEXT,
+	kirjeldus TEXT,
+	kood TEXT,
+	hind DOUBLE PRECISION, 
+	tootja INT, 
+	kataloog INT, 
+	lisaja INT,
+	OUT uus_toode INT
+)
+AS $$
+DECLARE
+	pr product_catalog.product_catalog%TYPE;
+	en enterprise.enterprise%TYPE;
+	err_msg TEXT;
+
+BEGIN
+	SELECT product_catalog INTO pr FROM product_catalog WHERE product_catalog = kataloog;
+	IF FOUND THEN
+		SELECT enterprise INTO en FROM enterprise WHERE enterprise = tootja;
+		IF FOUND THEN
+			INSERT INTO product (
+				name, description, catalog, created_by, created, updated_by, updated, enterprise, price, code
+			) VALUES (
+				nimi, kirjeldus, kataloog, lisaja, NOW(), lisaja, NOW(), tootja, hind, kood
+			);
+			SELECT last_value INTO uus_toode FROM s_product;
+		ELSE
+			SELECT -2 INTO uus_toode;
+		END IF;
+	ELSE 
+		SELECT -1 INTO uus_toode;
 	END IF;
 		
 	EXCEPTION WHEN raise_exception THEN 
